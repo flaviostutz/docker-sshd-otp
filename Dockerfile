@@ -10,8 +10,6 @@ RUN dpkg -i /tmp/libpam-google-authenticator_20130529-2_amd64.deb && rm /tmp/lib
 
 RUN apt-get clean
 
-ENV DEBIAN_FRONTEND noninteractive
-
 # Config SSHD
 RUN sed -i '2i auth required pam_google_authenticator.so nullok' /etc/pam.d/sshd
 RUN sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' /etc/ssh/sshd_config
@@ -26,7 +24,6 @@ ADD sshd-supervisor.sh /usr/local/bin/
 ADD wstunnel-supervisor.sh /usr/local/bin/
 ADD supervisor.d/* /etc/supervisor/conf.d/
 RUN mkdir -p /var/run/sshd /var/log/supervisor /root/.ssh
-RUN touch /var/log/auth.log
 
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"] 
 
