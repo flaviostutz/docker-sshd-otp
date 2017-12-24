@@ -1,13 +1,19 @@
-SSH Host with Fail2ban, Google Authenticator
-===
-This docker container bundles up sshd, fail2ban and google-authenticator TOTP into a secure ssh gateway box. Both root and 'user' accounts are available.
+# wstunnel-sshd
+Websocket Tunnel to SSH inside container. Primarily used for accessing a SSH session inside a private container network through simple HTTP.
 
-The 'Dockerfile-alt' can be used to prepopulate your authorized keys and google-authenticator config. You will need to put the keys into 'ssh/authorized_keys' and put the .google_authenticator file into 'google_authenticator'.
+Originally created to enable maintenance connections (by SSH port forwarding or Socks5) to containers inside private application networks on OpenShift, because container services in OpenShift are only exposed through HTTP(S). 
 
-Alternately, you can run it with the shipped Dockerfile and use 'exec' to put those files in place in the final image:
+Maybe used for por forwarding connections to databases, internal http endpoints and so.
 
-```
-cat google_authenticator | docker exec -i jovial_nobel sh -c 'cat >> /root/.google_authenticator'
-cat ~/.ssh/id_rsa.pub | docker exec -i jovial_nobel sh -c 'cat >> /root/.ssh/authorized_keys'
-```
+## Usage
 
+* Run this container inside the network (behind a http edge) you want to create a entrypoint. For example, inside a project in OpenShift or elsewhere.
+   ``docker run -p 8080:80 flaviostutz/wstunnel-sshd``
+
+* On the client machine
+ ** Install wstunnel
+   ``npm install -g wstunnel``
+ ** Connect SSH to the target container through wstunnel
+   ``ssh -o ProxyCommand="wstunnel -c -t stdio:%h:%p ws://localhost:8080" root@localhost``
+ ** You can create port forwardings too
+   ``ssh -o ProxyCommand="wstunnel -c -t stdio:%h:%p ws://mycontainer-openshift" -o UserKnownHostsFile=/dev/null -L8888:test.svc:80 root@localhost``

@@ -1,18 +1,36 @@
-FROM ubuntu:trusty
-RUN apt-get update && apt-get upgrade -y && apt-get install -y ed ssh rsyslog fail2ban openssh-server openssh-client supervisor python-pyinotify libpam-google-authenticator && apt-get clean
+FROM node:9.3.0-wheezy
+
+RUN apt-get update
+RUN apt-get install -y ed ssh openssh-server openssh-client supervisor python-pyinotify
+
+# google authenticator
+RUN apt-get install libqrencode3 -y
+RUN cd /tmp && wget http://ftp.us.debian.org/debian/pool/main/g/google-authenticator/libpam-google-authenticator_20130529-2_amd64.deb
+RUN dpkg -i /tmp/libpam-google-authenticator_20130529-2_amd64.deb && rm /tmp/libpam-google-authenticator_20130529-2_amd64.deb
+
+RUN apt-get clean
+
 ENV DEBIAN_FRONTEND noninteractive
 
-# Enable google-auth
-RUN sed -i '2i auth required pam_google_authenticator.so' /etc/pam.d/sshd
+# Config SSHD
+RUN sed -i '2i auth required pam_google_authenticator.so nullok' /etc/pam.d/sshd
 RUN sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' /etc/ssh/sshd_config
-RUN adduser user --disabled-login && adduser user adm && adduser user sudo
+RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-# Set up directories
-RUN mkdir -p /var/run/sshd /var/log/supervisor /var/run/fail2ban /root/.ssh /home/user/.ssh
+# Config wstunnel
+RUN npm install -g wstunnel
 
-COPY fail2ban-supervisor.sh /usr/local/bin/
-COPY supervisor.d/* /etc/supervisor/conf.d/
-COPY fail2ban/* /etc/fail2ban/
-RUN chown -R user: /home/user/
+# RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+
+ADD sshd-supervisor.sh /usr/local/bin/
+ADD wstunnel-supervisor.sh /usr/local/bin/
+ADD supervisor.d/* /etc/supervisor/conf.d/
+RUN mkdir -p /var/run/sshd /var/log/supervisor /root/.ssh
+RUN touch /var/log/auth.log
+
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"] 
-EXPOSE 22
+
+ENV GOOGLE_AUTHENTICATOR_ENABLE  false
+ENV ROOT_PASSWORD                root123
+
+EXPOSE 22 80
