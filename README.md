@@ -27,6 +27,6 @@ Maybe used for por forwarding connections to databases, internal http endpoints 
    
   * You can create port forwardings too
  
-     ``ssh -o ProxyCommand="wstunnel -c -t stdio:%h:%p ws://mycontainer-openshift" -o UserKnownHostsFile=/dev/null -L8888:test.svc:80 root@localhost``
+     ``ssh -o ProxyCommand="wstunnel -c -t stdio:%h:%p wss://mycontainer-openshift" -o UserKnownHostsFile=/dev/null -L8888:test.svc:80 root@localhost``
    
   * If you enabled Google Authenticator, enter the numbers displayed on Google Authenticator App during login verification when asked for "Verification Code"
