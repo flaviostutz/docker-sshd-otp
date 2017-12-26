@@ -6,7 +6,6 @@ if [ ! -f /past-sshd ]; then
     touch /past-sshd
     echo "Creating SSH keys..."
     rm /etc/ssh/ssh_host_dsa_key
-    # dpkg-reconfigure openssh-server
     ssh-keygen -t rsa -f /etc/ssh/ssh_host_dsa_key -N ''
 fi 
 
