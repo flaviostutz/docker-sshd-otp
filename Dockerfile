@@ -14,6 +14,7 @@ RUN apt-get clean
 # Config SSHD
 RUN sed -i '2i auth required pam_google_authenticator.so nullok' /etc/pam.d/sshd
 RUN sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' /etc/ssh/sshd_config
+RUN sed -i 's/UsePrivilegeSeparation yes/UsePrivilegeSeparation no/' /etc/ssh/sshd_config
 RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 # RUN sed -ri 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
 
