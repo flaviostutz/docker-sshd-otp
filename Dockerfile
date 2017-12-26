@@ -1,4 +1,5 @@
-FROM node:9.3.0-wheezy
+FROM nodesource/trusty:6.3.0
+# FROM node:9.3.0-wheezy
 
 RUN apt-get update
 RUN apt-get install -y ed ssh openssh-server openssh-client supervisor python-pyinotify
