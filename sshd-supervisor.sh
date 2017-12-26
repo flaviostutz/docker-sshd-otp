@@ -16,4 +16,5 @@ if [ "${GOOGLE_AUTHENTICATOR_ENABLE}" == "true" ] && [ ! -f /root/.google_authen
     google-authenticator -t -d -f -r 5 -R 30 -w 3
 fi
 
-/usr/sbin/sshd -D
+/usr/sbin/sshd -E /var/log/sshd.log
+tail -f /var/log/sshd.log
