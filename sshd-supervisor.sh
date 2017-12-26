@@ -6,7 +6,8 @@ if [ ! -f /past-sshd ]; then
     touch /past-sshd
     echo "Creating SSH keys..."
     rm /etc/ssh/ssh_host_dsa_key
-    ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N ''
+    dpkg-reconfigure openssh-server
+    # ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N ''
 fi 
 
 # Enable google-auth

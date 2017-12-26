@@ -14,11 +14,10 @@ RUN apt-get clean
 # RUN sed -i '2i auth required pam_google_authenticator.so nullok' /etc/pam.d/sshd
 # RUN sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -ri 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
 
 # Config wstunnel
 RUN npm install -g wstunnel
-
-# RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 
 ADD sshd-supervisor.sh /usr/local/bin/
 ADD wstunnel-supervisor.sh /usr/local/bin/
