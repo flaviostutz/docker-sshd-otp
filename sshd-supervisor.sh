@@ -12,6 +12,7 @@ fi
 # Enable google-auth
 if [ "${GOOGLE_AUTHENTICATOR_ENABLE}" == "true" ] && [ ! -f /root/.google_authenticator ]; then
     echo "Creating a new key for Google Authenticator otp authentication..."
+    echo ">>>>COPY THE LINK BELOW AND PASTE IT TO A BROWSER IN ORDER TO VIEW THE QRCODE (DON'T CLICK ON THE LINK BECAUSE IT WON'T WORK)<<<<"
     google-authenticator -t -d -f -r 5 -R 30 -w 3
 fi
 
