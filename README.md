@@ -1,4 +1,8 @@
 # wstunnel-sshd
+
+[<img src="https://img.shields.io/docker/pulls/flaviostutz/wstunnel-sshd"/>](https://hub.docker.com/r/flaviostutz/wstunnel-sshd)
+[<img src="https://img.shields.io/docker/automated/flaviostutz/wstunnel-sshd"/>](https://hub.docker.com/r/flaviostutz/wstunnel-sshd)
+
 Websocket Tunnel to SSH inside container. Primarily used for accessing a SSH session inside a private container network through simple HTTP.
 
 Originally created to enable maintenance connections (by SSH port forwarding or Socks5) to containers inside private application networks on OpenShift, because container services in OpenShift are only exposed through HTTP(S). 
